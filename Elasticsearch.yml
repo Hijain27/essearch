@@ -1,0 +1,167 @@
+---
+- hosts: all
+  remote_user: centos
+  gather_facts: true
+  become: true
+  become_method: sudo
+  become_user: root
+
+  vars:
+    password : td4n3w6@vNkye#$
+    user : esuser
+
+  tasks:
+   - name: Create esuser user
+     action: user name={{ user }} password={{ password|password_hash('sha512') }} update_password=always
+                                shell=/bin/bash home=/home/{{ user }}
+
+   - name: "Make sure we have a 'esuser' group"
+     group:
+        name: esuser
+        state: present
+
+   - name: "Allow 'esuser' group to have passwordless sudo"
+     lineinfile:
+        line: "%esuser ALL=(ALL) NOPASSWD: ALL"
+        dest: /etc/sudoers
+        regexp: ^%admin
+        state: present
+        validate: "visudo -cf %s"
+
+
+   - name: Create a Directory Elasticsearch
+     become: true
+     become_user: esuser
+     file:
+      path: /home/esuser/elasticsearch
+      state: directory
+      mode: 0755
+      owner: esuser
+      group: esuser
+
+   - name: install the java
+     become: true
+     become_user: root
+     become_method: sudo
+     yum:
+      name: java-1.8.0-openjdk.x86_64
+      state: present
+
+
+   - name: Download the URL
+     become: true
+     become_user: esuser
+     get_url:
+      url: "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.12.0-linux-x86_64.tar.gz"
+      dest: /home/esuser/elasticsearch
+      mode: 0755
+      group: esuser
+      owner: esuser
+
+   - name: Unarchiev the tar file  file
+     unarchive:
+       src: /home/esuser/elasticsearch/elasticsearch-7.12.0-linux-x86_64.tar.gz
+       dest: /home/esuser/elasticsearch
+       mode: 0755
+       group: esuser
+       owner: esuser
+       remote_src: true
+
+   - name: create instance.yml file
+     become: true
+     become_user: esuser
+     file:
+      path: "/home/esuser/elasticsearch/instance.yml"
+      state: touch
+      mode: 0755
+      group: esuser
+      owner: esuser
+
+   - name: Add content in instance.yml file
+     become: true
+     become_user: esuser
+     copy:
+      dest: "/home/esuser/elasticsearch/instance.yml"
+      content: |
+        instances:
+          -
+            name: "master-1"
+            ip:
+              - "127.0.0.1"
+
+   - name: Geneate the CAcerts for enable the TLS/SSL Communications
+     shell:
+      "bin/elasticsearch-certutil cert --keep-ca-key --pem --in /home/esuser/elasticsearch/instance.yml --out /home/esuser/elasticsearch/certs.zip"
+     args:
+      chdir: /home/esuser/elasticsearch/elasticsearch-7.12.0
+
+   - name: Unzip the CACerts
+     unarchive:
+       src: /home/esuser/elasticsearch/certs.zip
+       dest: /home/esuser/elasticsearch
+       mode: 0755
+       group: esuser
+       owner: esuser
+       remote_src: true
+
+   - name: create certs directory
+     become: true
+     become_user: esuser
+     file:
+      path: /home/esuser/elasticsearch/certs
+      state: directory
+      mode: 0755
+      owner: esuser
+      group: esuser
+
+   - name: copy ca files into the certs directory
+     copy:
+      src: /home/esuser/elasticsearch/ca/
+      dest: /home/esuser/elasticsearch/certs/
+      mode: 0755
+      group: esuser
+      owner: esuser
+      remote_src: true
+
+   - name: copy node files into the certs directory
+     copy:
+      src: /home/esuser/elasticsearch/master-1/
+      dest: /home/esuser/elasticsearch/certs/
+      mode: 0755
+      group: esuser
+      owner: esuser
+      remote_src: true
+
+   - name: certs folder to the undercelasticconfiguration file
+     copy:
+      src: /home/esuser/elasticsearch/certs
+      dest: /home/esuser/elasticsearch/elasticsearch-7.12.0/config/
+      mode: 0755
+      group: esuser
+      owner: esuser
+      remote_src: true
+
+   - name: Add new values to the elasticsearch.yml file
+     lineinfile:
+       path: /home/esuser/elasticsearch/elasticsearch-7.12.0/config/elasticsearch.yml
+       state: present
+       line: "{{ item }}"
+     with_items:
+      - "cluster.name: elk-cluster"
+      - "http.port: 9200"
+      - "xpack.security.enabled: true"
+      - "xpack.security.http.ssl.enabled: true"
+      - "xpack.security.transport.ssl.enabled: true"
+      - "xpack.security.http.ssl.key: /home/esuser/elasticsearch/elasticsearch-7.12.0/config/certs/master-1.key"
+      - "xpack.security.http.ssl.certificate: /home/esuser/elasticsearch/elasticsearch-7.12.0/config/certs/master-1.crt"
+      - "xpack.security.http.ssl.certificate_authorities: /home/esuser/elasticsearch/elasticsearch-7.12.0/config/certs/ca.crt"
+      - "xpack.security.transport.ssl.key: /home/esuser/elasticsearch/elasticsearch-7.12.0/config/certs/master-1.key"
+      - "xpack.security.transport.ssl.certificate: /home/esuser/elasticsearch/elasticsearch-7.12.0/config/certs/master-1.crt"
+      - "xpack.security.transport.ssl.certificate_authorities: /home/esuser/elasticsearch/elasticsearch-7.12.0/config/certs/ca.crt"
+
+   - name: Start the elasticsearch
+     become_user: esuser
+     shell:
+      "bin/elasticsearch -d"
+     args:
+        chdir: /home/esuser/elasticsearch/elasticsearch-7.12.0

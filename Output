@@ -1,0 +1,1617 @@
+[himanshu@aws-jump Elasticsearchcluster]$ terraform apply
+
+An execution plan has been generated and is shown below.
+Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_instance.elasticserchserver will be created
+  + resource "aws_instance" "elasticserchserver" {
+      + ami                          = "ami-0ffc7af9c06de0077"
+      + arn                          = (known after apply)
+      + associate_public_ip_address  = true
+      + availability_zone            = "ap-south-1a"
+      + cpu_core_count               = (known after apply)
+      + cpu_threads_per_core         = (known after apply)
+      + get_password_data            = false
+      + host_id                      = (known after apply)
+      + id                           = (known after apply)
+      + instance_state               = (known after apply)
+      + instance_type                = "t2.micro"
+      + ipv6_address_count           = (known after apply)
+      + ipv6_addresses               = (known after apply)
+      + key_name                     = "eskey"
+      + outpost_arn                  = (known after apply)
+      + password_data                = (known after apply)
+      + placement_group              = (known after apply)
+      + primary_network_interface_id = (known after apply)
+      + private_dns                  = (known after apply)
+      + private_ip                   = (known after apply)
+      + public_dns                   = (known after apply)
+      + public_ip                    = (known after apply)
+      + secondary_private_ips        = (known after apply)
+      + security_groups              = (known after apply)
+      + source_dest_check            = false
+      + subnet_id                    = (known after apply)
+      + tags                         = {
+          + "Name" = "ElasticsearchServer"
+        }
+      + tenancy                      = (known after apply)
+      + vpc_security_group_ids       = (known after apply)
+
+      + ebs_block_device {
+          + delete_on_termination = (known after apply)
+          + device_name           = (known after apply)
+          + encrypted             = (known after apply)
+          + iops                  = (known after apply)
+          + kms_key_id            = (known after apply)
+          + snapshot_id           = (known after apply)
+          + tags                  = (known after apply)
+          + throughput            = (known after apply)
+          + volume_id             = (known after apply)
+          + volume_size           = (known after apply)
+          + volume_type           = (known after apply)
+        }
+
+      + enclave_options {
+          + enabled = (known after apply)
+        }
+
+      + ephemeral_block_device {
+          + device_name  = (known after apply)
+          + no_device    = (known after apply)
+          + virtual_name = (known after apply)
+        }
+
+      + metadata_options {
+          + http_endpoint               = (known after apply)
+          + http_put_response_hop_limit = (known after apply)
+          + http_tokens                 = (known after apply)
+        }
+
+      + network_interface {
+          + delete_on_termination = (known after apply)
+          + device_index          = (known after apply)
+          + network_interface_id  = (known after apply)
+        }
+
+      + root_block_device {
+          + delete_on_termination = (known after apply)
+          + device_name           = (known after apply)
+          + encrypted             = (known after apply)
+          + iops                  = (known after apply)
+          + kms_key_id            = (known after apply)
+          + tags                  = (known after apply)
+          + throughput            = (known after apply)
+          + volume_id             = (known after apply)
+          + volume_size           = (known after apply)
+          + volume_type           = (known after apply)
+        }
+    }
+
+  # aws_internet_gateway.ESNATGateway will be created
+  + resource "aws_internet_gateway" "ESNATGateway" {
+      + arn      = (known after apply)
+      + id       = (known after apply)
+      + owner_id = (known after apply)
+      + vpc_id   = (known after apply)
+    }
+
+  # aws_route_table.ESroutetable will be created
+  + resource "aws_route_table" "ESroutetable" {
+      + arn              = (known after apply)
+      + id               = (known after apply)
+      + owner_id         = (known after apply)
+      + propagating_vgws = (known after apply)
+      + route            = [
+          + {
+              + carrier_gateway_id         = ""
+              + cidr_block                 = "0.0.0.0/0"
+              + destination_prefix_list_id = ""
+              + egress_only_gateway_id     = ""
+              + gateway_id                 = (known after apply)
+              + instance_id                = ""
+              + ipv6_cidr_block            = ""
+              + local_gateway_id           = ""
+              + nat_gateway_id             = ""
+              + network_interface_id       = ""
+              + transit_gateway_id         = ""
+              + vpc_endpoint_id            = ""
+              + vpc_peering_connection_id  = ""
+            },
+        ]
+      + vpc_id           = (known after apply)
+    }
+
+  # aws_route_table_association.PublicSubnetforES will be created
+  + resource "aws_route_table_association" "PublicSubnetforES" {
+      + id             = (known after apply)
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # aws_security_group.ESSecurityGroup will be created
+  + resource "aws_security_group" "ESSecurityGroup" {
+      + arn                    = (known after apply)
+      + description            = "Allow traffic to pass from the private subnet to the internet"
+      + egress                 = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = ""
+              + from_port        = 0
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "-1"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 0
+            },
+        ]
+      + id                     = (known after apply)
+      + ingress                = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = ""
+              + from_port        = 22
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 22
+            },
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = ""
+              + from_port        = 9200
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 9200
+            },
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = ""
+              + from_port        = 9300
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 9300
+            },
+        ]
+      + name                   = "ElasticseaarchSecurityGroup"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + revoke_rules_on_delete = false
+      + tags                   = {
+          + "Name" = "NATSG"
+        }
+      + vpc_id                 = (known after apply)
+    }
+
+  # aws_subnet.PrivateSubnetForES will be created
+  + resource "aws_subnet" "PrivateSubnetForES" {
+      + arn                             = (known after apply)
+      + assign_ipv6_address_on_creation = false
+      + availability_zone               = "ap-south-1a"
+      + availability_zone_id            = (known after apply)
+      + cidr_block                      = "10.0.1.0/24"
+      + id                              = (known after apply)
+      + ipv6_cidr_block_association_id  = (known after apply)
+      + map_public_ip_on_launch         = false
+      + owner_id                        = (known after apply)
+      + tags                            = {
+          + "Name" = "Private Subnet"
+        }
+      + tags_all                        = {
+          + "Name" = "Private Subnet"
+        }
+      + vpc_id                          = (known after apply)
+    }
+
+  # aws_subnet.PublicSubnetforES will be created
+  + resource "aws_subnet" "PublicSubnetforES" {
+      + arn                             = (known after apply)
+      + assign_ipv6_address_on_creation = false
+      + availability_zone               = "ap-south-1a"
+      + availability_zone_id            = (known after apply)
+      + cidr_block                      = "10.0.0.0/24"
+      + id                              = (known after apply)
+      + ipv6_cidr_block_association_id  = (known after apply)
+      + map_public_ip_on_launch         = false
+      + owner_id                        = (known after apply)
+      + tags                            = {
+          + "Name" = "Public Subnet"
+        }
+      + tags_all                        = {
+          + "Name" = "Public Subnet"
+        }
+      + vpc_id                          = (known after apply)
+    }
+
+  # aws_vpc.ESvpc will be created
+  + resource "aws_vpc" "ESvpc" {
+      + arn                              = (known after apply)
+      + assign_generated_ipv6_cidr_block = false
+      + cidr_block                       = "10.0.0.0/16"
+      + default_network_acl_id           = (known after apply)
+      + default_route_table_id           = (known after apply)
+      + default_security_group_id        = (known after apply)
+      + dhcp_options_id                  = (known after apply)
+      + enable_classiclink               = (known after apply)
+      + enable_classiclink_dns_support   = (known after apply)
+      + enable_dns_hostnames             = true
+      + enable_dns_support               = true
+      + id                               = (known after apply)
+      + instance_tenancy                 = "default"
+      + ipv6_association_id              = (known after apply)
+      + ipv6_cidr_block                  = (known after apply)
+      + main_route_table_id              = (known after apply)
+      + owner_id                         = (known after apply)
+      + tags                             = {
+          + "Name" = "ESVPC"
+        }
+      + tags_all                         = {
+          + "Name" = "ESVPC"
+        }
+    }
+
+Plan: 8 to add, 0 to change, 0 to destroy.
+
+
+Warning: Interpolation-only expressions are deprecated
+
+  on main.tf line 11, in provider "aws":
+  11: access_key = "${var.aws_access_key}"
+
+Terraform 0.11 and earlier required all non-constant expressions to be
+provided via interpolation syntax, but this pattern is now deprecated. To
+silence this warning, remove the "${ sequence from the start and the }"
+sequence from the end of this expression, leaving just the inner expression.
+
+Template interpolation syntax is still used to construct strings from
+expressions when the template includes multiple interpolation sequences or a
+mixture of literal strings and interpolations. This deprecation applies only
+to templates that consist entirely of a single interpolation sequence.
+
+(and 8 more similar warnings elsewhere)
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+aws_vpc.ESvpc: Creating...
+aws_vpc.ESvpc: Still creating... [10s elapsed]
+aws_vpc.ESvpc: Creation complete after 10s [id=vpc-0338cdbedf2f0939c]
+aws_subnet.PublicSubnetforES: Creating...
+aws_internet_gateway.ESNATGateway: Creating...
+aws_subnet.PrivateSubnetForES: Creating...
+aws_security_group.ESSecurityGroup: Creating...
+aws_internet_gateway.ESNATGateway: Creation complete after 0s [id=igw-02f815d72cab8d0e5]
+aws_route_table.ESroutetable: Creating...
+aws_subnet.PublicSubnetforES: Creation complete after 0s [id=subnet-0a2796ac3b383fc78]
+aws_subnet.PrivateSubnetForES: Creation complete after 0s [id=subnet-0eb17d44bb9e183ef]
+aws_route_table.ESroutetable: Creation complete after 0s [id=rtb-088fd9989b1e760f3]
+aws_route_table_association.PublicSubnetforES: Creating...
+aws_route_table_association.PublicSubnetforES: Creation complete after 0s [id=rtbassoc-07185716a5433c02b]
+aws_security_group.ESSecurityGroup: Creation complete after 0s [id=sg-0490968183b144ed6]
+aws_instance.elasticserchserver: Creating...
+aws_instance.elasticserchserver: Still creating... [10s elapsed]
+aws_instance.elasticserchserver: Still creating... [20s elapsed]
+aws_instance.elasticserchserver: Provisioning with 'remote-exec'...
+aws_instance.elasticserchserver (remote-exec): Connecting to remote host via SSH...
+aws_instance.elasticserchserver (remote-exec):   Host: 13.127.69.183
+aws_instance.elasticserchserver (remote-exec):   User: centos
+aws_instance.elasticserchserver (remote-exec):   Password: false
+aws_instance.elasticserchserver (remote-exec):   Private key: true
+aws_instance.elasticserchserver (remote-exec):   Certificate: false
+aws_instance.elasticserchserver (remote-exec):   SSH Agent: false
+aws_instance.elasticserchserver (remote-exec):   Checking Host Key: false
+aws_instance.elasticserchserver (remote-exec):   Target Platform: unix
+aws_instance.elasticserchserver: Still creating... [30s elapsed]
+aws_instance.elasticserchserver (remote-exec): Connecting to remote host via SSH...
+aws_instance.elasticserchserver (remote-exec):   Host: 13.127.69.183
+aws_instance.elasticserchserver (remote-exec):   User: centos
+aws_instance.elasticserchserver (remote-exec):   Password: false
+aws_instance.elasticserchserver (remote-exec):   Private key: true
+aws_instance.elasticserchserver (remote-exec):   Certificate: false
+aws_instance.elasticserchserver (remote-exec):   SSH Agent: false
+aws_instance.elasticserchserver (remote-exec):   Checking Host Key: false
+aws_instance.elasticserchserver (remote-exec):   Target Platform: unix
+aws_instance.elasticserchserver (remote-exec): Connecting to remote host via SSH...
+aws_instance.elasticserchserver (remote-exec):   Host: 13.127.69.183
+aws_instance.elasticserchserver (remote-exec):   User: centos
+aws_instance.elasticserchserver (remote-exec):   Password: false
+aws_instance.elasticserchserver (remote-exec):   Private key: true
+aws_instance.elasticserchserver (remote-exec):   Certificate: false
+aws_instance.elasticserchserver (remote-exec):   SSH Agent: false
+aws_instance.elasticserchserver (remote-exec):   Checking Host Key: false
+aws_instance.elasticserchserver (remote-exec):   Target Platform: unix
+aws_instance.elasticserchserver: Still creating... [40s elapsed]
+aws_instance.elasticserchserver (remote-exec): Connecting to remote host via SSH...
+aws_instance.elasticserchserver (remote-exec):   Host: 13.127.69.183
+aws_instance.elasticserchserver (remote-exec):   User: centos
+aws_instance.elasticserchserver (remote-exec):   Password: false
+aws_instance.elasticserchserver (remote-exec):   Private key: true
+aws_instance.elasticserchserver (remote-exec):   Certificate: false
+aws_instance.elasticserchserver (remote-exec):   SSH Agent: false
+aws_instance.elasticserchserver (remote-exec):   Checking Host Key: false
+aws_instance.elasticserchserver (remote-exec):   Target Platform: unix
+aws_instance.elasticserchserver: Still creating... [50s elapsed]
+aws_instance.elasticserchserver (remote-exec): Connecting to remote host via SSH...
+aws_instance.elasticserchserver (remote-exec):   Host: 13.127.69.183
+aws_instance.elasticserchserver (remote-exec):   User: centos
+aws_instance.elasticserchserver (remote-exec):   Password: false
+aws_instance.elasticserchserver (remote-exec):   Private key: true
+aws_instance.elasticserchserver (remote-exec):   Certificate: false
+aws_instance.elasticserchserver (remote-exec):   SSH Agent: false
+aws_instance.elasticserchserver (remote-exec):   Checking Host Key: false
+aws_instance.elasticserchserver (remote-exec):   Target Platform: unix
+aws_instance.elasticserchserver: Still creating... [1m0s elapsed]
+aws_instance.elasticserchserver (remote-exec): Connecting to remote host via SSH...
+aws_instance.elasticserchserver (remote-exec):   Host: 13.127.69.183
+aws_instance.elasticserchserver (remote-exec):   User: centos
+aws_instance.elasticserchserver (remote-exec):   Password: false
+aws_instance.elasticserchserver (remote-exec):   Private key: true
+aws_instance.elasticserchserver (remote-exec):   Certificate: false
+aws_instance.elasticserchserver (remote-exec):   SSH Agent: false
+aws_instance.elasticserchserver (remote-exec):   Checking Host Key: false
+aws_instance.elasticserchserver (remote-exec):   Target Platform: unix
+aws_instance.elasticserchserver: Still creating... [1m10s elapsed]
+aws_instance.elasticserchserver: Still creating... [1m20s elapsed]
+aws_instance.elasticserchserver (remote-exec): Connecting to remote host via SSH...
+aws_instance.elasticserchserver (remote-exec):   Host: 13.127.69.183
+aws_instance.elasticserchserver (remote-exec):   User: centos
+aws_instance.elasticserchserver (remote-exec):   Password: false
+aws_instance.elasticserchserver (remote-exec):   Private key: true
+aws_instance.elasticserchserver (remote-exec):   Certificate: false
+aws_instance.elasticserchserver (remote-exec):   SSH Agent: false
+aws_instance.elasticserchserver (remote-exec):   Checking Host Key: false
+aws_instance.elasticserchserver (remote-exec):   Target Platform: unix
+aws_instance.elasticserchserver (remote-exec): Connected!
+aws_instance.elasticserchserver (remote-exec): Loaded plugins: fastestmirror
+aws_instance.elasticserchserver (remote-exec): Determining fastest mirrors
+aws_instance.elasticserchserver (remote-exec):  * base: d36uatko69830t.cloudfront.net
+aws_instance.elasticserchserver (remote-exec):  * extras: d36uatko69830t.cloudfront.net
+aws_instance.elasticserchserver (remote-exec):  * updates: d36uatko69830t.cloudfront.net
+aws_instance.elasticserchserver (remote-exec): base             | 3.6 kB     00:00
+aws_instance.elasticserchserver (remote-exec): extras           | 2.9 kB     00:00
+aws_instance.elasticserchserver (remote-exec): updates          | 2.9 kB     00:00
+aws_instance.elasticserchserver (remote-exec): (1/4): base/7/x86_ | 153 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (2/4): extras/7/x8 | 232 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (3/4): updates/7/x | 7.1 MB   00:00
+aws_instance.elasticserchserver: Still creating... [1m30s elapsed]
+aws_instance.elasticserchserver (remote-exec): (4/4): base/7/ 55% | 7.5 MB   --:-- ETA
+aws_instance.elasticserchserver (remote-exec): (4/4): base/7/ 55% | 7.6 MB   02:46 ETA
+aws_instance.elasticserchserver (remote-exec): (4/4): base/7/ 56% | 7.7 MB   01:34 ETA
+aws_instance.elasticserchserver (remote-exec): (4/4): base/7/ 61% | 8.4 MB   00:28 ETA
+aws_instance.elasticserchserver (remote-exec): (4/4): base/7/ 78% |  11 MB   00:04 ETA
+aws_instance.elasticserchserver (remote-exec): (4/4): base/7/x86_ | 6.1 MB   00:03
+aws_instance.elasticserchserver (remote-exec): Resolving Dependencies
+aws_instance.elasticserchserver (remote-exec): --> Running transaction check
+aws_instance.elasticserchserver (remote-exec): ---> Package bind-export-libs.x86_64 32:9.11.4-26.P2.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package bind-export-libs.x86_64 32:9.11.4-26.P2.el7_9.4 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package centos-release.x86_64 0:7-9.2009.0.el7.centos will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package centos-release.x86_64 0:7-9.2009.1.el7.centos will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package cloud-init.x86_64 0:19.4-7.el7.centos will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package cloud-init.x86_64 0:19.4-7.el7.centos.4 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package coreutils.x86_64 0:8.22-24.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package coreutils.x86_64 0:8.22-24.el7_9.2 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package curl.x86_64 0:7.29.0-59.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package curl.x86_64 0:7.29.0-59.el7_9.1 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package device-mapper.x86_64 7:1.02.170-6.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package device-mapper.x86_64 7:1.02.170-6.el7_9.4 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package device-mapper-libs.x86_64 7:1.02.170-6.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package device-mapper-libs.x86_64 7:1.02.170-6.el7_9.4 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package dmidecode.x86_64 1:3.2-5.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package dmidecode.x86_64 1:3.2-5.el7_9.1 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package freetype.x86_64 0:2.8-14.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package freetype.x86_64 0:2.8-14.el7_9.1 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package glib2.x86_64 0:2.56.1-7.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package glib2.x86_64 0:2.56.1-8.el7 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package glibc.x86_64 0:2.17-317.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package glibc.x86_64 0:2.17-323.el7_9 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package glibc-common.x86_64 0:2.17-317.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package glibc-common.x86_64 0:2.17-323.el7_9 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package grub2.x86_64 1:2.02-0.86.el7.centos will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package grub2.x86_64 1:2.02-0.87.el7.centos.6 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package grub2-common.noarch 1:2.02-0.86.el7.centos will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package grub2-common.noarch 1:2.02-0.87.el7.centos.6 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package grub2-pc.x86_64 1:2.02-0.86.el7.centos will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package grub2-pc.x86_64 1:2.02-0.87.el7.centos.6 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package grub2-pc-modules.noarch 1:2.02-0.86.el7.centos will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package grub2-pc-modules.noarch 1:2.02-0.87.el7.centos.6 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package grub2-tools.x86_64 1:2.02-0.86.el7.centos will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package grub2-tools.x86_64 1:2.02-0.87.el7.centos.6 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package grub2-tools-extra.x86_64 1:2.02-0.86.el7.centos will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package grub2-tools-extra.x86_64 1:2.02-0.87.el7.centos.6 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package grub2-tools-minimal.x86_64 1:2.02-0.86.el7.centos will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package grub2-tools-minimal.x86_64 1:2.02-0.87.el7.centos.6 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package initscripts.x86_64 0:9.49.53-1.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package initscripts.x86_64 0:9.49.53-1.el7_9.1 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package kernel.x86_64 0:3.10.0-1160.24.1.el7 will be installed
+aws_instance.elasticserchserver (remote-exec): --> Processing Dependency: linux-firmware >= 20190429-72 for package: kernel-3.10.0-1160.24.1.el7.x86_64
+aws_instance.elasticserchserver (remote-exec): ---> Package kernel-tools.x86_64 0:3.10.0-1160.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package kernel-tools.x86_64 0:3.10.0-1160.24.1.el7 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package kernel-tools-libs.x86_64 0:3.10.0-1160.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package kernel-tools-libs.x86_64 0:3.10.0-1160.24.1.el7 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package kexec-tools.x86_64 0:2.0.15-51.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package kexec-tools.x86_64 0:2.0.15-51.el7_9.1 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package kpartx.x86_64 0:0.4.9-133.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package kpartx.x86_64 0:0.4.9-134.el7_9 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package libblkid.x86_64 0:2.23.2-65.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package libblkid.x86_64 0:2.23.2-65.el7_9.1 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package libcroco.x86_64 0:0.6.12-4.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package libcroco.x86_64 0:0.6.12-6.el7_9 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package libcurl.x86_64 0:7.29.0-59.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package libcurl.x86_64 0:7.29.0-59.el7_9.1 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package libmount.x86_64 0:2.23.2-65.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package libmount.x86_64 0:2.23.2-65.el7_9.1 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package libsmartcols.x86_64 0:2.23.2-65.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package libsmartcols.x86_64 0:2.23.2-65.el7_9.1 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package libuuid.x86_64 0:2.23.2-65.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package libuuid.x86_64 0:2.23.2-65.el7_9.1 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package microcode_ctl.x86_64 2:2.1-73.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package microcode_ctl.x86_64 2:2.1-73.8.el7_9 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package nspr.x86_64 0:4.21.0-1.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package nspr.x86_64 0:4.25.0-2.el7_9 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package nss.x86_64 0:3.44.0-7.el7_7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package nss.x86_64 0:3.53.1-3.el7_9 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package nss-softokn.x86_64 0:3.44.0-8.el7_7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package nss-softokn.x86_64 0:3.53.1-6.el7_9 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package nss-softokn-freebl.x86_64 0:3.44.0-8.el7_7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package nss-softokn-freebl.x86_64 0:3.53.1-6.el7_9 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package nss-sysinit.x86_64 0:3.44.0-7.el7_7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package nss-sysinit.x86_64 0:3.53.1-3.el7_9 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package nss-tools.x86_64 0:3.44.0-7.el7_7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package nss-tools.x86_64 0:3.53.1-3.el7_9 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package nss-util.x86_64 0:3.44.0-4.el7_7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package nss-util.x86_64 0:3.53.1-1.el7_9 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package openssl.x86_64 1:1.0.2k-19.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package openssl.x86_64 1:1.0.2k-21.el7_9 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package openssl-libs.x86_64 1:1.0.2k-19.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package openssl-libs.x86_64 1:1.0.2k-21.el7_9 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package python.x86_64 0:2.7.5-89.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package python.x86_64 0:2.7.5-90.el7 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package python-libs.x86_64 0:2.7.5-89.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package python-libs.x86_64 0:2.7.5-90.el7 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package python-perf.x86_64 0:3.10.0-1160.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package python-perf.x86_64 0:3.10.0-1160.24.1.el7 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package rsyslog.x86_64 0:8.24.0-55.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package rsyslog.x86_64 0:8.24.0-57.el7_9 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package selinux-policy.noarch 0:3.13.1-268.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package selinux-policy.noarch 0:3.13.1-268.el7_9.2 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package selinux-policy-targeted.noarch 0:3.13.1-268.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package selinux-policy-targeted.noarch 0:3.13.1-268.el7_9.2 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package sudo.x86_64 0:1.8.23-10.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package sudo.x86_64 0:1.8.23-10.el7_9.1 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package systemd.x86_64 0:219-78.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package systemd.x86_64 0:219-78.el7_9.3 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package systemd-libs.x86_64 0:219-78.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package systemd-libs.x86_64 0:219-78.el7_9.3 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package systemd-sysv.x86_64 0:219-78.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package systemd-sysv.x86_64 0:219-78.el7_9.3 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package tuned.noarch 0:2.11.0-9.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package tuned.noarch 0:2.11.0-11.el7_9 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package tzdata.noarch 0:2020a-1.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package tzdata.noarch 0:2021a-1.el7 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package util-linux.x86_64 0:2.23.2-65.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package util-linux.x86_64 0:2.23.2-65.el7_9.1 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package vim-minimal.x86_64 2:7.4.629-7.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package vim-minimal.x86_64 2:7.4.629-8.el7_9 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package wpa_supplicant.x86_64 1:2.6-12.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package wpa_supplicant.x86_64 1:2.6-12.el7_9.2 will be an update
+aws_instance.elasticserchserver (remote-exec): ---> Package zlib.x86_64 0:1.2.7-18.el7 will be updated
+aws_instance.elasticserchserver (remote-exec): ---> Package zlib.x86_64 0:1.2.7-19.el7_9 will be an update
+aws_instance.elasticserchserver (remote-exec): --> Running transaction check
+aws_instance.elasticserchserver (remote-exec): ---> Package linux-firmware.noarch 0:20200421-80.git78c0348.el7_9 will be installed
+aws_instance.elasticserchserver (remote-exec): --> Finished Dependency Resolution
+
+aws_instance.elasticserchserver (remote-exec): Dependencies Resolved
+
+aws_instance.elasticserchserver (remote-exec): ========================================
+aws_instance.elasticserchserver (remote-exec):  Package        Arch   Version
+aws_instance.elasticserchserver (remote-exec):                           Repository
+aws_instance.elasticserchserver (remote-exec):                                    Size
+aws_instance.elasticserchserver (remote-exec): ========================================
+aws_instance.elasticserchserver (remote-exec): Installing:
+aws_instance.elasticserchserver (remote-exec):  kernel         x86_64 3.10.0-1160.24.1.el7
+aws_instance.elasticserchserver (remote-exec):                           updates  50 M
+aws_instance.elasticserchserver (remote-exec): Updating:
+aws_instance.elasticserchserver (remote-exec):  bind-export-libs
+aws_instance.elasticserchserver (remote-exec):                 x86_64 32:9.11.4-26.P2.el7_9.4
+aws_instance.elasticserchserver (remote-exec):                           updates 1.1 M
+aws_instance.elasticserchserver (remote-exec):  centos-release x86_64 7-9.2009.1.el7.centos
+aws_instance.elasticserchserver (remote-exec):                           updates  27 k
+aws_instance.elasticserchserver (remote-exec):  cloud-init     x86_64 19.4-7.el7.centos.4
+aws_instance.elasticserchserver (remote-exec):                           updates 933 k
+aws_instance.elasticserchserver (remote-exec):  coreutils      x86_64 8.22-24.el7_9.2
+aws_instance.elasticserchserver (remote-exec):                           updates 3.3 M
+aws_instance.elasticserchserver (remote-exec):  curl           x86_64 7.29.0-59.el7_9.1
+aws_instance.elasticserchserver (remote-exec):                           updates 271 k
+aws_instance.elasticserchserver (remote-exec):  device-mapper  x86_64 7:1.02.170-6.el7_9.4
+aws_instance.elasticserchserver (remote-exec):                           updates 297 k
+aws_instance.elasticserchserver (remote-exec):  device-mapper-libs
+aws_instance.elasticserchserver (remote-exec):                 x86_64 7:1.02.170-6.el7_9.4
+aws_instance.elasticserchserver (remote-exec):                           updates 325 k
+aws_instance.elasticserchserver (remote-exec):  dmidecode      x86_64 1:3.2-5.el7_9.1
+aws_instance.elasticserchserver (remote-exec):                           updates  82 k
+aws_instance.elasticserchserver (remote-exec):  freetype       x86_64 2.8-14.el7_9.1
+aws_instance.elasticserchserver (remote-exec):                           updates 380 k
+aws_instance.elasticserchserver (remote-exec):  glib2          x86_64 2.56.1-8.el7
+aws_instance.elasticserchserver (remote-exec):                           updates 2.5 M
+aws_instance.elasticserchserver (remote-exec):  glibc          x86_64 2.17-323.el7_9
+aws_instance.elasticserchserver (remote-exec):                           updates 3.6 M
+aws_instance.elasticserchserver (remote-exec):  glibc-common   x86_64 2.17-323.el7_9
+aws_instance.elasticserchserver (remote-exec):                           updates  12 M
+aws_instance.elasticserchserver (remote-exec):  grub2          x86_64 1:2.02-0.87.el7.centos.6
+aws_instance.elasticserchserver (remote-exec):                           updates  34 k
+aws_instance.elasticserchserver (remote-exec):  grub2-common   noarch 1:2.02-0.87.el7.centos.6
+aws_instance.elasticserchserver (remote-exec):                           updates 732 k
+aws_instance.elasticserchserver (remote-exec):  grub2-pc       x86_64 1:2.02-0.87.el7.centos.6
+aws_instance.elasticserchserver (remote-exec):                           updates  34 k
+aws_instance.elasticserchserver (remote-exec):  grub2-pc-modules
+aws_instance.elasticserchserver (remote-exec):                 noarch 1:2.02-0.87.el7.centos.6
+aws_instance.elasticserchserver (remote-exec):                           updates 858 k
+aws_instance.elasticserchserver (remote-exec):  grub2-tools    x86_64 1:2.02-0.87.el7.centos.6
+aws_instance.elasticserchserver (remote-exec):                           updates 1.8 M
+aws_instance.elasticserchserver (remote-exec):  grub2-tools-extra
+aws_instance.elasticserchserver (remote-exec):                 x86_64 1:2.02-0.87.el7.centos.6
+aws_instance.elasticserchserver (remote-exec):                           updates 1.0 M
+aws_instance.elasticserchserver (remote-exec):  grub2-tools-minimal
+aws_instance.elasticserchserver (remote-exec):                 x86_64 1:2.02-0.87.el7.centos.6
+aws_instance.elasticserchserver (remote-exec):                           updates 177 k
+aws_instance.elasticserchserver (remote-exec):  initscripts    x86_64 9.49.53-1.el7_9.1
+aws_instance.elasticserchserver (remote-exec):                           updates 440 k
+aws_instance.elasticserchserver (remote-exec):  kernel-tools   x86_64 3.10.0-1160.24.1.el7
+aws_instance.elasticserchserver (remote-exec):                           updates 8.1 M
+aws_instance.elasticserchserver (remote-exec):  kernel-tools-libs
+aws_instance.elasticserchserver (remote-exec):                 x86_64 3.10.0-1160.24.1.el7
+aws_instance.elasticserchserver (remote-exec):                           updates 8.0 M
+aws_instance.elasticserchserver (remote-exec):  kexec-tools    x86_64 2.0.15-51.el7_9.1
+aws_instance.elasticserchserver (remote-exec):                           updates 351 k
+aws_instance.elasticserchserver (remote-exec):  kpartx         x86_64 0.4.9-134.el7_9
+aws_instance.elasticserchserver (remote-exec):                           updates  81 k
+aws_instance.elasticserchserver (remote-exec):  libblkid       x86_64 2.23.2-65.el7_9.1
+aws_instance.elasticserchserver (remote-exec):                           updates 183 k
+aws_instance.elasticserchserver (remote-exec):  libcroco       x86_64 0.6.12-6.el7_9
+aws_instance.elasticserchserver (remote-exec):                           updates 105 k
+aws_instance.elasticserchserver (remote-exec):  libcurl        x86_64 7.29.0-59.el7_9.1
+aws_instance.elasticserchserver (remote-exec):                           updates 223 k
+aws_instance.elasticserchserver (remote-exec):  libmount       x86_64 2.23.2-65.el7_9.1
+aws_instance.elasticserchserver (remote-exec):                           updates 185 k
+aws_instance.elasticserchserver (remote-exec):  libsmartcols   x86_64 2.23.2-65.el7_9.1
+aws_instance.elasticserchserver (remote-exec):                           updates 143 k
+aws_instance.elasticserchserver (remote-exec):  libuuid        x86_64 2.23.2-65.el7_9.1
+aws_instance.elasticserchserver (remote-exec):                           updates  84 k
+aws_instance.elasticserchserver (remote-exec):  microcode_ctl  x86_64 2:2.1-73.8.el7_9
+aws_instance.elasticserchserver (remote-exec):                           updates 3.3 M
+aws_instance.elasticserchserver (remote-exec):  nspr           x86_64 4.25.0-2.el7_9
+aws_instance.elasticserchserver (remote-exec):                           updates 127 k
+aws_instance.elasticserchserver (remote-exec):  nss            x86_64 3.53.1-3.el7_9
+aws_instance.elasticserchserver (remote-exec):                           updates 869 k
+aws_instance.elasticserchserver (remote-exec):  nss-softokn    x86_64 3.53.1-6.el7_9
+aws_instance.elasticserchserver (remote-exec):                           updates 354 k
+aws_instance.elasticserchserver (remote-exec):  nss-softokn-freebl
+aws_instance.elasticserchserver (remote-exec):                 x86_64 3.53.1-6.el7_9
+aws_instance.elasticserchserver (remote-exec):                           updates 322 k
+aws_instance.elasticserchserver (remote-exec):  nss-sysinit    x86_64 3.53.1-3.el7_9
+aws_instance.elasticserchserver (remote-exec):                           updates  65 k
+aws_instance.elasticserchserver (remote-exec):  nss-tools      x86_64 3.53.1-3.el7_9
+aws_instance.elasticserchserver (remote-exec):                           updates 535 k
+aws_instance.elasticserchserver (remote-exec):  nss-util       x86_64 3.53.1-1.el7_9
+aws_instance.elasticserchserver (remote-exec):                           updates  79 k
+aws_instance.elasticserchserver (remote-exec):  openssl        x86_64 1:1.0.2k-21.el7_9
+aws_instance.elasticserchserver (remote-exec):                           updates 493 k
+aws_instance.elasticserchserver (remote-exec):  openssl-libs   x86_64 1:1.0.2k-21.el7_9
+aws_instance.elasticserchserver (remote-exec):                           updates 1.2 M
+aws_instance.elasticserchserver (remote-exec):  python         x86_64 2.7.5-90.el7
+aws_instance.elasticserchserver (remote-exec):                           updates  96 k
+aws_instance.elasticserchserver (remote-exec):  python-libs    x86_64 2.7.5-90.el7
+aws_instance.elasticserchserver (remote-exec):                           updates 5.6 M
+aws_instance.elasticserchserver (remote-exec):  python-perf    x86_64 3.10.0-1160.24.1.el7
+aws_instance.elasticserchserver (remote-exec):                           updates 8.1 M
+aws_instance.elasticserchserver (remote-exec):  rsyslog        x86_64 8.24.0-57.el7_9
+aws_instance.elasticserchserver (remote-exec):                           updates 621 k
+aws_instance.elasticserchserver (remote-exec):  selinux-policy noarch 3.13.1-268.el7_9.2
+aws_instance.elasticserchserver (remote-exec):                           updates 498 k
+aws_instance.elasticserchserver (remote-exec):  selinux-policy-targeted
+aws_instance.elasticserchserver (remote-exec):                 noarch 3.13.1-268.el7_9.2
+aws_instance.elasticserchserver (remote-exec):                           updates 7.0 M
+aws_instance.elasticserchserver (remote-exec):  sudo           x86_64 1.8.23-10.el7_9.1
+aws_instance.elasticserchserver (remote-exec):                           updates 843 k
+aws_instance.elasticserchserver (remote-exec):  systemd        x86_64 219-78.el7_9.3
+aws_instance.elasticserchserver (remote-exec):                           updates 5.1 M
+aws_instance.elasticserchserver (remote-exec):  systemd-libs   x86_64 219-78.el7_9.3
+aws_instance.elasticserchserver (remote-exec):                           updates 418 k
+aws_instance.elasticserchserver (remote-exec):  systemd-sysv   x86_64 219-78.el7_9.3
+aws_instance.elasticserchserver (remote-exec):                           updates  97 k
+aws_instance.elasticserchserver (remote-exec):  tuned          noarch 2.11.0-11.el7_9
+aws_instance.elasticserchserver (remote-exec):                           updates 269 k
+aws_instance.elasticserchserver (remote-exec):  tzdata         noarch 2021a-1.el7
+aws_instance.elasticserchserver (remote-exec):                           updates 501 k
+aws_instance.elasticserchserver (remote-exec):  util-linux     x86_64 2.23.2-65.el7_9.1
+aws_instance.elasticserchserver (remote-exec):                           updates 2.0 M
+aws_instance.elasticserchserver (remote-exec):  vim-minimal    x86_64 2:7.4.629-8.el7_9
+aws_instance.elasticserchserver (remote-exec):                           updates 443 k
+aws_instance.elasticserchserver (remote-exec):  wpa_supplicant x86_64 1:2.6-12.el7_9.2
+aws_instance.elasticserchserver (remote-exec):                           updates 1.2 M
+aws_instance.elasticserchserver (remote-exec):  zlib           x86_64 1.2.7-19.el7_9
+aws_instance.elasticserchserver (remote-exec):                           updates  90 k
+aws_instance.elasticserchserver (remote-exec): Installing for dependencies:
+aws_instance.elasticserchserver (remote-exec):  linux-firmware noarch 20200421-80.git78c0348.el7_9
+aws_instance.elasticserchserver (remote-exec):                           updates  80 M
+
+aws_instance.elasticserchserver (remote-exec): Transaction Summary
+aws_instance.elasticserchserver (remote-exec): ========================================
+aws_instance.elasticserchserver (remote-exec): Install   1 Package  (+1 Dependent package)
+aws_instance.elasticserchserver (remote-exec): Upgrade  56 Packages
+
+aws_instance.elasticserchserver (remote-exec): Total download size: 217 M
+aws_instance.elasticserchserver (remote-exec): Downloading packages:
+aws_instance.elasticserchserver (remote-exec): Delta RPMs disabled because /usr/bin/applydeltarpm not installed.
+aws_instance.elasticserchserver (remote-exec): warning: /var/cache/yum/x86_64/7/updates/packages/centos-release-7-9.2009.1.el7.centos.x86_64.rpm: Header V3 RSA/SHA256 Signature, key ID f4a80eb5: NOKEY
+aws_instance.elasticserchserver (remote-exec): Public key for centos-release-7-9.2009.1.el7.centos.x86_64.rpm is not installed
+aws_instance.elasticserchserver (remote-exec): (1/58): centos-rel |  27 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (2/58): bind-expor | 1.1 MB   00:00
+aws_instance.elasticserchserver (remote-exec): (3/58): cloud-init | 933 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (4/58): curl-7.29. | 271 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (5/58): device-map | 297 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (6/58): device-map | 325 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (7/58): coreutils- | 3.3 MB   00:00
+aws_instance.elasticserchserver (remote-exec): (8/58): dmidecode- |  82 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (9/58): freetype-2 | 380 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (10/58): glib2-2.5 | 2.5 MB   00:00
+aws_instance.elasticserchserver (remote-exec): (11/58): glibc-2.1 | 3.6 MB   00:00
+aws_instance.elasticserchserver (remote-exec): (12/58): grub2-2.0 |  34 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (13/58): grub2-com | 732 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (14/58): grub2-pc- |  34 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (15/58): grub2-pc- | 858 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (16/58): glibc-com |  12 MB   00:00
+aws_instance.elasticserchserver (remote-exec): (17/58): grub2-too | 1.8 MB   00:00
+aws_instance.elasticserchserver (remote-exec): (18/58): grub2-too | 177 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (19/58): grub2-too | 1.0 MB   00:00
+aws_instance.elasticserchserver (remote-exec): (20/58): initscrip | 440 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (21/58): kernel-to | 8.1 MB   00:00
+aws_instance.elasticserchserver (remote-exec): (23/58): kerne 28% |  61 MB   --:-- ETA
+aws_instance.elasticserchserver (remote-exec): (22/58): kernel-to | 8.0 MB   00:00
+aws_instance.elasticserchserver (remote-exec): (23/58): kexec-too | 351 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (24/58): kpartx-0. |  81 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (25/58): libblkid- | 183 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (26/58): libcroco- | 105 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (27/58): libcurl-7 | 223 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (28/58): libmount- | 185 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (29/58): libsmartc | 143 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (30/58): libuuid-2 |  84 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (32/58): linux 42% |  92 MB   00:04 ETA
+aws_instance.elasticserchserver (remote-exec): (31/58): kernel-3. |  50 MB   00:01
+aws_instance.elasticserchserver (remote-exec): (33/58): micro 55% | 120 MB   00:03 ETA
+aws_instance.elasticserchserver (remote-exec): (32/58): microcode | 3.3 MB   00:00
+aws_instance.elasticserchserver (remote-exec): (33/58): nspr-4.25 | 127 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (34/58): nss-3.53. | 869 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (35/58): nss-softo | 354 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (36/58): nss-softo | 322 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (37/58): nss-sysin |  65 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (38/58): nss-tools | 535 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (39/58): nss-util- |  79 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (40/58): openssl-1 | 493 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (41/58): openssl-l | 1.2 MB   00:00
+aws_instance.elasticserchserver (remote-exec): (42/58): python-2. |  96 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (43/58): linux 81% | 177 MB   00:01 ETA
+aws_instance.elasticserchserver (remote-exec): (43/58): python-li | 5.6 MB   00:00
+aws_instance.elasticserchserver (remote-exec): (44/58): linux-fir |  80 MB   00:01
+aws_instance.elasticserchserver (remote-exec): (45/58): python-pe | 8.1 MB   00:00
+aws_instance.elasticserchserver (remote-exec): (46/58): rsyslog-8 | 621 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (47/58): selinux-p | 498 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (48/58): sudo-1.8. | 843 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (49/58): selinux-p | 7.0 MB   00:00
+aws_instance.elasticserchserver (remote-exec): (50/58): systemd-2 | 5.1 MB   00:00
+aws_instance.elasticserchserver (remote-exec): (51/58): systemd-l | 418 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (52/58): systemd-s |  97 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (53/58): tuned-2.1 | 269 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (54/58): tzdata-20 | 501 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (55/58): vim-minim | 443 kB   00:00
+aws_instance.elasticserchserver (remote-exec): (56/58): wpa_suppl | 1.2 MB   00:00
+aws_instance.elasticserchserver (remote-exec): (57/58): util-linu | 2.0 MB   00:00
+aws_instance.elasticserchserver (remote-exec): (58/58): zlib-1.2. |  90 kB   00:00
+aws_instance.elasticserchserver (remote-exec): ----------------------------------------
+aws_instance.elasticserchserver (remote-exec): Total       81 MB/s | 217 MB  00:02
+aws_instance.elasticserchserver (remote-exec): Retrieving key from file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+aws_instance.elasticserchserver (remote-exec): Importing GPG key 0xF4A80EB5:
+aws_instance.elasticserchserver (remote-exec):  Userid     : "CentOS-7 Key (CentOS 7 Official Signing Key) <security@centos.org>"
+aws_instance.elasticserchserver (remote-exec):  Fingerprint: 6341 ab27 53d7 8a78 a7c2 7bb1 24c6 a8a7 f4a8 0eb5
+aws_instance.elasticserchserver (remote-exec):  Package    : centos-release-7-9.2009.0.el7.centos.x86_64 (installed)
+aws_instance.elasticserchserver (remote-exec):  From       : /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+aws_instance.elasticserchserver: Still creating... [1m40s elapsed]
+aws_instance.elasticserchserver (remote-exec): Running transaction check
+aws_instance.elasticserchserver (remote-exec): Running transaction test
+aws_instance.elasticserchserver (remote-exec): Transaction test succeeded
+aws_instance.elasticserchserver (remote-exec): Running transaction
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [       ]   1/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [#      ]   1/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [##     ]   1/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [###    ]   1/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [####   ]   1/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [#####  ]   1/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [###### ]   1/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub2-common     1/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : centos [       ]   2/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : centos [#      ]   2/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : centos [###    ]   2/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : centos [####   ]   2/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : centos [###### ]   2/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : centos-release     2/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [       ]   3/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [#      ]   3/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [##     ]   3/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [###    ]   3/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [####   ]   3/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [#####  ]   3/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [###### ]   3/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub2-pc-mod     3/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : tzdata [       ]   4/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : tzdata [#      ]   4/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : tzdata [##     ]   4/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : tzdata [###    ]   4/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : tzdata [####   ]   4/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : tzdata [#####  ]   4/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : tzdata [###### ]   4/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : tzdata-2021a-1     4/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : glibc- [       ]   5/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : glibc- [#      ]   5/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : glibc- [##     ]   5/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : glibc- [###    ]   5/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : glibc- [####   ]   5/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : glibc- [#####  ]   5/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : glibc- [###### ]   5/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : glibc-common-2     5/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-so [       ]   6/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-so [#      ]   6/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-so [##     ]   6/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-so [###    ]   6/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-so [####   ]   6/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-so [#####  ]   6/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-so [###### ]   6/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-softokn-fr     6/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : glibc- [       ]   7/114
+aws_instance.elasticserchserver: Still creating... [1m50s elapsed]
+aws_instance.elasticserchserver (remote-exec):   Updating   : glibc- [#      ]   7/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : glibc- [##     ]   7/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : glibc- [###    ]   7/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : glibc- [####   ]   7/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : glibc- [#####  ]   7/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : glibc- [###### ]   7/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : glibc-2.17-323     7/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nspr-4 [       ]   8/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nspr-4 [#      ]   8/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nspr-4 [###    ]   8/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nspr-4 [####   ]   8/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nspr-4 [###### ]   8/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nspr-4.25.0-2.     8/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-ut [       ]   9/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-ut [##     ]   9/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-ut [####   ]   9/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-ut [###### ]   9/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-util-3.53.     9/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : zlib-1 [       ]  10/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : zlib-1 [##     ]  10/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : zlib-1 [###    ]  10/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : zlib-1 [#####  ]  10/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : zlib-1 [###### ]  10/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : zlib-1.2.7-19.    10/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:open [       ]  11/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:open [#      ]  11/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:open [##     ]  11/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:open [###    ]  11/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:open [####   ]  11/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:open [#####  ]  11/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:open [###### ]  11/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:openssl-libs    11/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : coreut [       ]  12/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : coreut [#      ]  12/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : coreut [##     ]  12/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : coreut [###    ]  12/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : coreut [####   ]  12/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : coreut [#####  ]  12/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : coreut [###### ]  12/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : coreutils-8.22    12/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libuui [       ]  13/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libuui [###### ]  13/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libuuid-2.23.2    13/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : system [       ]  14/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : system [#      ]  14/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : system [##     ]  14/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : system [###    ]  14/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : system [####   ]  14/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : system [#####  ]  14/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : system [###### ]  14/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : systemd-libs-2    14/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libblk [       ]  15/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libblk [#      ]  15/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libblk [###    ]  15/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libblk [#####  ]  15/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libblk [###### ]  15/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libblkid-2.23.    15/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libmou [       ]  16/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libmou [#      ]  16/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libmou [###    ]  16/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libmou [####   ]  16/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libmou [###### ]  16/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libmount-2.23.    16/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : glib2- [       ]  17/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : glib2- [#      ]  17/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : glib2- [##     ]  17/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : glib2- [###    ]  17/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : glib2- [####   ]  17/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : glib2- [#####  ]  17/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : glib2- [###### ]  17/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : glib2-2.56.1-8    17/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : python [       ]  18/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : python [#      ]  18/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : python [##     ]  18/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : python [###    ]  18/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : python [####   ]  18/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : python [#####  ]  18/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : python [###### ]  18/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : python-libs-2.    18/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : python [       ]  19/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : python [#      ]  19/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : python [###### ]  19/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : python-2.7.5-9    19/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-so [       ]  20/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-so [#      ]  20/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-so [##     ]  20/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-so [###    ]  20/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-so [####   ]  20/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-so [#####  ]  20/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-so [###### ]  20/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-softokn-3.    20/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-sy [       ]  21/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-sy [###### ]  21/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-sysinit-3.    21/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-3. [       ]  22/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-3. [#      ]  22/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-3. [##     ]  22/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-3. [###    ]  22/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-3. [####   ]  22/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-3. [#####  ]  22/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-3. [###### ]  22/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-3.53.1-3.e    22/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libcur [       ]  23/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libcur [##     ]  23/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libcur [###    ]  23/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libcur [####   ]  23/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libcur [#####  ]  23/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libcur [###### ]  23/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libcurl-7.29.0    23/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : system [       ]  24/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : system [#      ]  24/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : system [##     ]  24/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : system [###    ]  24/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : system [####   ]  24/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : system [#####  ]  24/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : system [###### ]  24/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : systemd-219-78    24/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : system [       ]  25/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : system [###### ]  25/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : systemd-sysv-2    25/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : python [       ]  26/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : python [#      ]  26/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : python [##     ]  26/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : python [###    ]  26/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : python [#####  ]  26/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : python [###### ]  26/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : python-perf-3.    26/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : selinu [       ]  27/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : selinu [###### ]  27/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : selinux-policy    27/114
+aws_instance.elasticserchserver: Still creating... [2m0s elapsed]
+aws_instance.elasticserchserver (remote-exec):   Updating   : freety [       ]  28/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : freety [#      ]  28/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : freety [##     ]  28/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : freety [###    ]  28/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : freety [####   ]  28/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : freety [#####  ]  28/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : freety [###### ]  28/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : freetype-2.8-1    28/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libsma [       ]  29/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libsma [##     ]  29/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libsma [#####  ]  29/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libsma [###### ]  29/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libsmartcols-2    29/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : util-l [       ]  30/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : util-l [#      ]  30/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : util-l [##     ]  30/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : util-l [###    ]  30/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : util-l [####   ]  30/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : util-l [#####  ]  30/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : util-l [###### ]  30/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : util-linux-2.2    30/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 7:devi [       ]  31/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 7:devi [#      ]  31/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 7:devi [##     ]  31/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 7:devi [###    ]  31/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 7:devi [####   ]  31/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 7:devi [#####  ]  31/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 7:devi [###### ]  31/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 7:device-mappe    31/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 7:devi [       ]  32/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 7:devi [##     ]  32/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 7:devi [###    ]  32/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 7:devi [####   ]  32/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 7:devi [#####  ]  32/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 7:devi [###### ]  32/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 7:device-mappe    32/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [       ]  33/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [#      ]  33/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [##     ]  33/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [###    ]  33/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [####   ]  33/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [#####  ]  33/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [###### ]  33/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub2-tools-    33/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [       ]  34/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [#      ]  34/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [##     ]  34/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [###    ]  34/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [####   ]  34/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [#####  ]  34/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [###### ]  34/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub2-tools-    34/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [       ]  35/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [#      ]  35/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [##     ]  35/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [###    ]  35/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [####   ]  35/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [#####  ]  35/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [###### ]  35/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub2-tools-    35/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [       ]  36/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [###    ]  36/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub2-pc-2.0    36/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : initsc [       ]  37/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : initsc [#      ]  37/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : initsc [##     ]  37/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : initsc [###    ]  37/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : initsc [####   ]  37/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : initsc [#####  ]  37/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : initsc [###### ]  37/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : initscripts-9.    37/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:dmid [       ]  38/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:dmid [##     ]  38/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:dmid [####   ]  38/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:dmid [#####  ]  38/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:dmid [###### ]  38/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:dmidecode-3.    38/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 2:vim- [       ]  39/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 2:vim- [#      ]  39/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 2:vim- [##     ]  39/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 2:vim- [###    ]  39/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 2:vim- [####   ]  39/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 2:vim- [#####  ]  39/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 2:vim- [###### ]  39/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 2:vim-minimal-    39/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : kernel [       ]  40/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : kernel [###### ]  40/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : kernel-tools-l    40/114
+aws_instance.elasticserchserver (remote-exec):   Installing : linux- [       ]  41/114
+aws_instance.elasticserchserver: Still creating... [2m10s elapsed]
+aws_instance.elasticserchserver (remote-exec):   Installing : linux- [#      ]  41/114
+aws_instance.elasticserchserver (remote-exec):   Installing : linux- [##     ]  41/114
+aws_instance.elasticserchserver (remote-exec):   Installing : linux- [###    ]  41/114
+aws_instance.elasticserchserver (remote-exec):   Installing : linux- [####   ]  41/114
+aws_instance.elasticserchserver (remote-exec):   Installing : linux- [#####  ]  41/114
+aws_instance.elasticserchserver: Still creating... [2m20s elapsed]
+aws_instance.elasticserchserver (remote-exec):   Installing : linux- [###### ]  41/114
+aws_instance.elasticserchserver (remote-exec):   Installing : linux-firmware    41/114
+aws_instance.elasticserchserver (remote-exec):   Installing : kernel [       ]  42/114
+aws_instance.elasticserchserver (remote-exec):   Installing : kernel [#      ]  42/114
+aws_instance.elasticserchserver (remote-exec):   Installing : kernel [##     ]  42/114
+aws_instance.elasticserchserver (remote-exec):   Installing : kernel [###    ]  42/114
+aws_instance.elasticserchserver (remote-exec):   Installing : kernel [####   ]  42/114
+aws_instance.elasticserchserver (remote-exec):   Installing : kernel [#####  ]  42/114
+aws_instance.elasticserchserver (remote-exec):   Installing : kernel [###### ]  42/114
+aws_instance.elasticserchserver (remote-exec):   Installing : kernel-3.10.0-    42/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : kernel [       ]  43/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : kernel [#      ]  43/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : kernel [##     ]  43/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : kernel [###    ]  43/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : kernel [####   ]  43/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : kernel [#####  ]  43/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : kernel [###### ]  43/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : kernel-tools-3    43/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : sudo-1 [       ]  44/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : sudo-1 [#      ]  44/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : sudo-1 [##     ]  44/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : sudo-1 [###    ]  44/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : sudo-1 [####   ]  44/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : sudo-1 [#####  ]  44/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : sudo-1 [###### ]  44/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : sudo-1.8.23-10    44/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : cloud- [       ]  45/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : cloud- [#      ]  45/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : cloud- [##     ]  45/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : cloud- [###    ]  45/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : cloud- [####   ]  45/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : cloud- [#####  ]  45/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : cloud- [###### ]  45/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : cloud-init-19.    45/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub [       ]  46/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:grub2-2.02-0    46/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : kpartx [       ]  47/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : kpartx [###### ]  47/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : kpartx-0.4.9-1    47/114
+aws_instance.elasticserchserver: Still creating... [2m30s elapsed]
+aws_instance.elasticserchserver (remote-exec):   Updating   : tuned- [       ]  48/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : tuned- [#      ]  48/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : tuned- [##     ]  48/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : tuned- [###    ]  48/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : tuned- [####   ]  48/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : tuned- [#####  ]  48/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : tuned- [###### ]  48/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : tuned-2.11.0-1    48/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : selinu [       ]  49/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : selinu [#      ]  49/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : selinu [##     ]  49/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : selinu [###    ]  49/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : selinu [####   ]  49/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : selinu [#####  ]  49/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : selinu [###### ]  49/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : selinux-policy    49/114
+aws_instance.elasticserchserver: Still creating... [2m40s elapsed]
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:wpa_ [       ]  50/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:wpa_ [#      ]  50/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:wpa_ [##     ]  50/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:wpa_ [###    ]  50/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:wpa_ [####   ]  50/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:wpa_ [#####  ]  50/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:wpa_ [###### ]  50/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:wpa_supplica    50/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 2:micr [       ]  51/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 2:micr [#      ]  51/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 2:micr [##     ]  51/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 2:micr [###    ]  51/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 2:micr [####   ]  51/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 2:micr [#####  ]  51/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 2:micr [###### ]  51/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 2:microcode_ct    51/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : rsyslo [       ]  52/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : rsyslo [#      ]  52/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : rsyslo [##     ]  52/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : rsyslo [###    ]  52/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : rsyslo [####   ]  52/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : rsyslo [#####  ]  52/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : rsyslo [###### ]  52/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : rsyslog-8.24.0    52/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : kexec- [       ]  53/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : kexec- [#      ]  53/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : kexec- [##     ]  53/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : kexec- [###    ]  53/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : kexec- [####   ]  53/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : kexec- [#####  ]  53/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : kexec- [###### ]  53/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : kexec-tools-2.    53/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : curl-7 [       ]  54/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : curl-7 [#      ]  54/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : curl-7 [##     ]  54/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : curl-7 [###    ]  54/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : curl-7 [####   ]  54/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : curl-7 [#####  ]  54/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : curl-7 [###### ]  54/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : curl-7.29.0-59    54/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-to [       ]  55/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-to [#      ]  55/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-to [##     ]  55/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-to [###    ]  55/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-to [####   ]  55/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-to [#####  ]  55/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-to [###### ]  55/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : nss-tools-3.53    55/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libcro [       ]  56/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libcro [#      ]  56/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libcro [###    ]  56/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libcro [####   ]  56/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libcro [#####  ]  56/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libcro [###### ]  56/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : libcroco-0.6.1    56/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:open [       ]  57/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:open [#      ]  57/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:open [##     ]  57/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:open [###    ]  57/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:open [####   ]  57/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:open [#####  ]  57/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:open [###### ]  57/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 1:openssl-1.0.    57/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 32:bin [       ]  58/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 32:bin [#      ]  58/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 32:bin [##     ]  58/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 32:bin [###    ]  58/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 32:bin [####   ]  58/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 32:bin [#####  ]  58/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 32:bin [###### ]  58/114
+aws_instance.elasticserchserver (remote-exec):   Updating   : 32:bind-export    58/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : nss-tools-3.44    59/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : 2:microcode_ct    60/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : cloud-init-19.    61/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : tuned-2.11.0-9    62/114
+aws_instance.elasticserchserver: Still creating... [2m50s elapsed]
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : selinux-policy    63/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : curl-7.29.0-59    64/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : 1:openssl-1.0.    65/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : initscripts-9.    66/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : 1:wpa_supplica    67/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : kexec-tools-2.    68/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : rsyslog-8.24.0    69/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : python-perf-3.    70/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : sudo-1.8.23-10    71/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : kernel-tools-3    72/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : 32:bind-export    73/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : kpartx-0.4.9-1    74/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : libcroco-0.6.1    75/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : systemd-sysv-2    76/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : selinux-policy    77/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : 1:grub2-2.02-0    78/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : 1:grub2-pc-2.0    79/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : 1:grub2-tools-    80/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : 1:grub2-tools-    81/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : python-2.7.5-8    82/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : python-libs-2.    83/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : glib2-2.56.1-7    84/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : 1:grub2-pc-mod    85/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : 1:grub2-tools-    86/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : 7:device-mappe    87/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : 7:device-mappe    88/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : systemd-219-78    89/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : util-linux-2.2    90/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : libcurl-7.29.0    91/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : nss-sysinit-3.    92/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : nss-3.44.0-7.e    93/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : nss-softokn-3.    94/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : libmount-2.23.    95/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : libblkid-2.23.    96/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : coreutils-8.22    97/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : 1:openssl-libs    98/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : freetype-2.8-1    99/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : zlib-1.2.7-18.   100/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : libuuid-2.23.2   101/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : libsmartcols-2   102/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : systemd-libs-2   103/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : kernel-tools-l   104/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : 2:vim-minimal-   105/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : 1:dmidecode-3.   106/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : centos-release   107/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : 1:grub2-common   108/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : glibc-common-2   109/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : nspr-4.21.0-1.   110/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : nss-util-3.44.   111/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : nss-softokn-fr   112/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : glibc-2.17-317   113/114
+aws_instance.elasticserchserver (remote-exec):   Cleanup    : tzdata-2020a-1   114/114
+aws_instance.elasticserchserver: Still creating... [3m0s elapsed]
+aws_instance.elasticserchserver: Still creating... [3m10s elapsed]
+aws_instance.elasticserchserver: Still creating... [3m20s elapsed]
+aws_instance.elasticserchserver: Still creating... [3m30s elapsed]
+aws_instance.elasticserchserver: Still creating... [3m40s elapsed]
+aws_instance.elasticserchserver: Still creating... [3m50s elapsed]
+aws_instance.elasticserchserver: Still creating... [4m0s elapsed]
+aws_instance.elasticserchserver: Still creating... [4m10s elapsed]
+aws_instance.elasticserchserver: Still creating... [4m20s elapsed]
+aws_instance.elasticserchserver: Still creating... [4m30s elapsed]
+aws_instance.elasticserchserver: Still creating... [4m40s elapsed]
+aws_instance.elasticserchserver: Still creating... [4m50s elapsed]
+aws_instance.elasticserchserver: Still creating... [5m0s elapsed]
+aws_instance.elasticserchserver (remote-exec):   Verifying  : libcurl-7.29.0     1/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : nss-tools-3.53     2/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : libblkid-2.23.     3/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : linux-firmware     4/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : nss-softokn-3.     5/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : nss-util-3.53.     6/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : selinux-policy     7/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 2:microcode_ct     8/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : nspr-4.25.0-2.     9/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : centos-release    10/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 1:grub2-common    11/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : libsmartcols-2    12/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 1:openssl-1.0.    13/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : kernel-tools-3    14/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : glibc-common-2    15/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 1:dmidecode-3.    16/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : selinux-policy    17/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 1:openssl-libs    18/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : python-libs-2.    19/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 1:grub2-tools-    20/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : freetype-2.8-1    21/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : rsyslog-8.24.0    22/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : libmount-2.23.    23/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : tuned-2.11.0-1    24/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : libcroco-0.6.1    25/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : glibc-2.17-323    26/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : systemd-sysv-2    27/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : nss-sysinit-3.    28/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : util-linux-2.2    29/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : kexec-tools-2.    30/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 1:grub2-pc-mod    31/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 7:device-mappe    32/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : nss-softokn-fr    33/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 1:grub2-tools-    34/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : curl-7.29.0-59    35/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : cloud-init-19.    36/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 2:vim-minimal-    37/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : glib2-2.56.1-8    38/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : zlib-1.2.7-19.    39/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : python-2.7.5-9    40/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : nss-3.53.1-3.e    41/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : coreutils-8.22    42/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : kpartx-0.4.9-1    43/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 1:wpa_supplica    44/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 7:device-mappe    45/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : libuuid-2.23.2    46/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : kernel-3.10.0-    47/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : systemd-libs-2    48/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 1:grub2-2.02-0    49/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : systemd-219-78    50/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : sudo-1.8.23-10    51/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 32:bind-export    52/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : kernel-tools-l    53/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 1:grub2-pc-2.0    54/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 1:grub2-tools-    55/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : initscripts-9.    56/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : python-perf-3.    57/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : tzdata-2021a-1    58/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : glibc-common-2    59/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : selinux-policy    60/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : nss-3.44.0-7.e    61/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : freetype-2.8-1    62/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : glib2-2.56.1-7    63/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : systemd-219-78    64/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 7:device-mappe    65/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : cloud-init-19.    66/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : libblkid-2.23.    67/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 1:grub2-common    68/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 1:grub2-tools-    69/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 1:openssl-libs    70/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : kernel-tools-l    71/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : sudo-1.8.23-10    72/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : libuuid-2.23.2    73/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 2:vim-minimal-    74/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : nss-tools-3.44    75/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : coreutils-8.22    76/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 1:wpa_supplica    77/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 2:microcode_ct    78/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 1:grub2-2.02-0    79/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : initscripts-9.    80/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 32:bind-export    81/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : rsyslog-8.24.0    82/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : nss-sysinit-3.    83/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 1:openssl-1.0.    84/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : tzdata-2020a-1    85/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : libcurl-7.29.0    86/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : curl-7.29.0-59    87/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 1:grub2-pc-2.0    88/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : kexec-tools-2.    89/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : nspr-4.21.0-1.    90/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : nss-softokn-fr    91/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : nss-softokn-3.    92/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : zlib-1.2.7-18.    93/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : libcroco-0.6.1    94/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : centos-release    95/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : systemd-libs-2    96/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 1:dmidecode-3.    97/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : tuned-2.11.0-9    98/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 7:device-mappe    99/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : python-perf-3.   100/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : python-2.7.5-8   101/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : selinux-policy   102/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : systemd-sysv-2   103/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 1:grub2-pc-mod   104/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : glibc-2.17-317   105/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : kpartx-0.4.9-1   106/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : python-libs-2.   107/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : nss-util-3.44.   108/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 1:grub2-tools-   109/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : kernel-tools-3   110/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : 1:grub2-tools-   111/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : libsmartcols-2   112/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : util-linux-2.2   113/114
+aws_instance.elasticserchserver (remote-exec):   Verifying  : libmount-2.23.   114/114
+
+aws_instance.elasticserchserver (remote-exec): Installed:
+aws_instance.elasticserchserver (remote-exec):   kernel.x86_64 0:3.10.0-1160.24.1.el7
+
+aws_instance.elasticserchserver (remote-exec): Dependency Installed:
+aws_instance.elasticserchserver (remote-exec):   linux-firmware.noarch 0:20200421-80.git78c0348.el7_9
+
+aws_instance.elasticserchserver (remote-exec): Updated:
+aws_instance.elasticserchserver (remote-exec):   bind-export-libs.x86_64 32:9.11.4-26.P2.el7_9.4
+aws_instance.elasticserchserver (remote-exec):   centos-release.x86_64 0:7-9.2009.1.el7.centos
+aws_instance.elasticserchserver (remote-exec):   cloud-init.x86_64 0:19.4-7.el7.centos.4
+aws_instance.elasticserchserver (remote-exec):   coreutils.x86_64 0:8.22-24.el7_9.2
+aws_instance.elasticserchserver (remote-exec):   curl.x86_64 0:7.29.0-59.el7_9.1
+aws_instance.elasticserchserver (remote-exec):   device-mapper.x86_64 7:1.02.170-6.el7_9.4
+aws_instance.elasticserchserver (remote-exec):   device-mapper-libs.x86_64 7:1.02.170-6.el7_9.4
+aws_instance.elasticserchserver (remote-exec):   dmidecode.x86_64 1:3.2-5.el7_9.1
+aws_instance.elasticserchserver (remote-exec):   freetype.x86_64 0:2.8-14.el7_9.1
+aws_instance.elasticserchserver (remote-exec):   glib2.x86_64 0:2.56.1-8.el7
+aws_instance.elasticserchserver (remote-exec):   glibc.x86_64 0:2.17-323.el7_9
+aws_instance.elasticserchserver (remote-exec):   glibc-common.x86_64 0:2.17-323.el7_9
+aws_instance.elasticserchserver (remote-exec):   grub2.x86_64 1:2.02-0.87.el7.centos.6
+aws_instance.elasticserchserver (remote-exec):   grub2-common.noarch 1:2.02-0.87.el7.centos.6
+aws_instance.elasticserchserver (remote-exec):   grub2-pc.x86_64 1:2.02-0.87.el7.centos.6
+aws_instance.elasticserchserver (remote-exec):   grub2-pc-modules.noarch 1:2.02-0.87.el7.centos.6
+aws_instance.elasticserchserver (remote-exec):   grub2-tools.x86_64 1:2.02-0.87.el7.centos.6
+aws_instance.elasticserchserver (remote-exec):   grub2-tools-extra.x86_64 1:2.02-0.87.el7.centos.6
+aws_instance.elasticserchserver (remote-exec):   grub2-tools-minimal.x86_64 1:2.02-0.87.el7.centos.6
+aws_instance.elasticserchserver (remote-exec):   initscripts.x86_64 0:9.49.53-1.el7_9.1
+aws_instance.elasticserchserver (remote-exec):   kernel-tools.x86_64 0:3.10.0-1160.24.1.el7
+aws_instance.elasticserchserver (remote-exec):   kernel-tools-libs.x86_64 0:3.10.0-1160.24.1.el7
+aws_instance.elasticserchserver (remote-exec):   kexec-tools.x86_64 0:2.0.15-51.el7_9.1
+aws_instance.elasticserchserver (remote-exec):   kpartx.x86_64 0:0.4.9-134.el7_9
+aws_instance.elasticserchserver (remote-exec):   libblkid.x86_64 0:2.23.2-65.el7_9.1
+aws_instance.elasticserchserver (remote-exec):   libcroco.x86_64 0:0.6.12-6.el7_9
+aws_instance.elasticserchserver (remote-exec):   libcurl.x86_64 0:7.29.0-59.el7_9.1
+aws_instance.elasticserchserver (remote-exec):   libmount.x86_64 0:2.23.2-65.el7_9.1
+aws_instance.elasticserchserver (remote-exec):   libsmartcols.x86_64 0:2.23.2-65.el7_9.1
+aws_instance.elasticserchserver (remote-exec):   libuuid.x86_64 0:2.23.2-65.el7_9.1
+aws_instance.elasticserchserver (remote-exec):   microcode_ctl.x86_64 2:2.1-73.8.el7_9
+aws_instance.elasticserchserver (remote-exec):   nspr.x86_64 0:4.25.0-2.el7_9
+aws_instance.elasticserchserver (remote-exec):   nss.x86_64 0:3.53.1-3.el7_9
+aws_instance.elasticserchserver (remote-exec):   nss-softokn.x86_64 0:3.53.1-6.el7_9
+aws_instance.elasticserchserver (remote-exec):   nss-softokn-freebl.x86_64 0:3.53.1-6.el7_9
+aws_instance.elasticserchserver (remote-exec):   nss-sysinit.x86_64 0:3.53.1-3.el7_9
+aws_instance.elasticserchserver (remote-exec):   nss-tools.x86_64 0:3.53.1-3.el7_9
+aws_instance.elasticserchserver (remote-exec):   nss-util.x86_64 0:3.53.1-1.el7_9
+aws_instance.elasticserchserver (remote-exec):   openssl.x86_64 1:1.0.2k-21.el7_9
+aws_instance.elasticserchserver (remote-exec):   openssl-libs.x86_64 1:1.0.2k-21.el7_9
+aws_instance.elasticserchserver (remote-exec):   python.x86_64 0:2.7.5-90.el7
+aws_instance.elasticserchserver (remote-exec):   python-libs.x86_64 0:2.7.5-90.el7
+aws_instance.elasticserchserver (remote-exec):   python-perf.x86_64 0:3.10.0-1160.24.1.el7
+aws_instance.elasticserchserver (remote-exec):   rsyslog.x86_64 0:8.24.0-57.el7_9
+aws_instance.elasticserchserver (remote-exec):   selinux-policy.noarch 0:3.13.1-268.el7_9.2
+aws_instance.elasticserchserver (remote-exec):   selinux-policy-targeted.noarch 0:3.13.1-268.el7_9.2
+aws_instance.elasticserchserver (remote-exec):   sudo.x86_64 0:1.8.23-10.el7_9.1
+aws_instance.elasticserchserver (remote-exec):   systemd.x86_64 0:219-78.el7_9.3
+aws_instance.elasticserchserver (remote-exec):   systemd-libs.x86_64 0:219-78.el7_9.3
+aws_instance.elasticserchserver (remote-exec):   systemd-sysv.x86_64 0:219-78.el7_9.3
+aws_instance.elasticserchserver (remote-exec):   tuned.noarch 0:2.11.0-11.el7_9
+aws_instance.elasticserchserver (remote-exec):   tzdata.noarch 0:2021a-1.el7
+aws_instance.elasticserchserver (remote-exec):   util-linux.x86_64 0:2.23.2-65.el7_9.1
+aws_instance.elasticserchserver (remote-exec):   vim-minimal.x86_64 2:7.4.629-8.el7_9
+aws_instance.elasticserchserver (remote-exec):   wpa_supplicant.x86_64 1:2.6-12.el7_9.2
+aws_instance.elasticserchserver (remote-exec):   zlib.x86_64 0:1.2.7-19.el7_9
+
+aws_instance.elasticserchserver (remote-exec): Complete!
+aws_instance.elasticserchserver (remote-exec): Loaded plugins: fastestmirror
+aws_instance.elasticserchserver (remote-exec): Loading mirror speeds from cached hostfile
+aws_instance.elasticserchserver (remote-exec):  * base: d36uatko69830t.cloudfront.net
+aws_instance.elasticserchserver (remote-exec):  * extras: d36uatko69830t.cloudfront.net
+aws_instance.elasticserchserver (remote-exec):  * updates: d36uatko69830t.cloudfront.net
+aws_instance.elasticserchserver (remote-exec): Resolving Dependencies
+aws_instance.elasticserchserver (remote-exec): --> Running transaction check
+aws_instance.elasticserchserver (remote-exec): ---> Package unzip.x86_64 0:6.0-21.el7 will be installed
+aws_instance.elasticserchserver (remote-exec): --> Finished Dependency Resolution
+
+aws_instance.elasticserchserver (remote-exec): Dependencies Resolved
+
+aws_instance.elasticserchserver (remote-exec): ========================================
+aws_instance.elasticserchserver (remote-exec):  Package
+aws_instance.elasticserchserver (remote-exec):         Arch    Version     Repository
+aws_instance.elasticserchserver (remote-exec):                                    Size
+aws_instance.elasticserchserver (remote-exec): ========================================
+aws_instance.elasticserchserver (remote-exec): Installing:
+aws_instance.elasticserchserver (remote-exec):  unzip  x86_64  6.0-21.el7  base  171 k
+
+aws_instance.elasticserchserver (remote-exec): Transaction Summary
+aws_instance.elasticserchserver (remote-exec): ========================================
+aws_instance.elasticserchserver (remote-exec): Install  1 Package
+
+aws_instance.elasticserchserver (remote-exec): Total download size: 171 k
+aws_instance.elasticserchserver (remote-exec): Installed size: 365 k
+aws_instance.elasticserchserver (remote-exec): Downloading packages:
+aws_instance.elasticserchserver (remote-exec): unzip-6.0-21.el7.x | 171 kB   00:00
+aws_instance.elasticserchserver (remote-exec): Running transaction check
+aws_instance.elasticserchserver (remote-exec): Running transaction test
+aws_instance.elasticserchserver (remote-exec): Transaction test succeeded
+aws_instance.elasticserchserver (remote-exec): Running transaction
+aws_instance.elasticserchserver (remote-exec):   Installing : unzip-6. [         ] 1/1
+aws_instance.elasticserchserver (remote-exec):   Installing : unzip-6. [##       ] 1/1
+aws_instance.elasticserchserver (remote-exec):   Installing : unzip-6. [###      ] 1/1
+aws_instance.elasticserchserver (remote-exec):   Installing : unzip-6. [####     ] 1/1
+aws_instance.elasticserchserver (remote-exec):   Installing : unzip-6. [######   ] 1/1
+aws_instance.elasticserchserver (remote-exec):   Installing : unzip-6. [#######  ] 1/1
+aws_instance.elasticserchserver (remote-exec):   Installing : unzip-6. [######## ] 1/1
+aws_instance.elasticserchserver (remote-exec):   Installing : unzip-6.0-21.el7.x   1/1
+aws_instance.elasticserchserver (remote-exec):   Verifying  : unzip-6.0-21.el7.x   1/1
+
+aws_instance.elasticserchserver (remote-exec): Installed:
+aws_instance.elasticserchserver (remote-exec):   unzip.x86_64 0:6.0-21.el7
+
+aws_instance.elasticserchserver (remote-exec): Complete!
+aws_instance.elasticserchserver (remote-exec): Done!
+aws_instance.elasticserchserver: Provisioning with 'local-exec'...
+aws_instance.elasticserchserver (local-exec): Executing: ["/bin/sh" "-c" "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u centos -i '13.127.69.183,' --private-key /home/himanshu/eskey.pem /home/himanshu/Elasticsearchcluster/esearch.yml"]
+
+aws_instance.elasticserchserver (local-exec): PLAY [all] *********************************************************************
+
+aws_instance.elasticserchserver (local-exec): TASK [Gathering Facts] *********************************************************
+aws_instance.elasticserchserver (local-exec): ok: [13.127.69.183]
+
+aws_instance.elasticserchserver (local-exec): TASK [Create esuser user] ******************************************************
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183]
+
+aws_instance.elasticserchserver (local-exec): TASK [Make sure we have a 'esuser' group] **************************************
+aws_instance.elasticserchserver (local-exec): ok: [13.127.69.183]
+
+aws_instance.elasticserchserver (local-exec): TASK [Allow 'esuser' group to have passwordless sudo] **************************
+aws_instance.elasticserchserver: Still creating... [5m10s elapsed]
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183]
+
+aws_instance.elasticserchserver (local-exec): TASK [Create a Directory Elasticsearch] ****************************************
+aws_instance.elasticserchserver (local-exec): [WARNING]: Module remote_tmp /home/esuser/.ansible/tmp did not exist and was
+aws_instance.elasticserchserver (local-exec): created with a mode of 0700, this may cause issues when running as another
+aws_instance.elasticserchserver (local-exec): user. To avoid this, create the remote_tmp dir with the correct permissions
+aws_instance.elasticserchserver (local-exec): manually
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183]
+
+aws_instance.elasticserchserver (local-exec): TASK [install the java] ********************************************************
+aws_instance.elasticserchserver: Still creating... [5m20s elapsed]
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183]
+
+aws_instance.elasticserchserver (local-exec): TASK [Download the URL] ********************************************************
+aws_instance.elasticserchserver: Still creating... [5m30s elapsed]
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183]
+
+aws_instance.elasticserchserver (local-exec): TASK [Unarchiev the tar file  file] ********************************************
+aws_instance.elasticserchserver: Still creating... [5m40s elapsed]
+aws_instance.elasticserchserver: Still creating... [5m50s elapsed]
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183]
+
+aws_instance.elasticserchserver (local-exec): TASK [create instance.yml file] ************************************************
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183]
+
+aws_instance.elasticserchserver (local-exec): TASK [Add content in instance.yml file] ****************************************
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183]
+
+aws_instance.elasticserchserver (local-exec): TASK [Geneate the CAcerts for enable the TLS/SSL Communications] ***************
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183]
+
+aws_instance.elasticserchserver (local-exec): TASK [Unzip the CACerts] *******************************************************
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183]
+
+aws_instance.elasticserchserver (local-exec): TASK [create certs directory] **************************************************
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183]
+
+aws_instance.elasticserchserver (local-exec): TASK [copy ca files into the certs directory] **********************************
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183]
+
+aws_instance.elasticserchserver (local-exec): TASK [copy node files into the certs directory] ********************************
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183]
+
+aws_instance.elasticserchserver (local-exec): TASK [certs folder to the undercelasticconfiguration file] *********************
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183]
+
+aws_instance.elasticserchserver (local-exec): TASK [Add new values to the elasticsearch.yml file] ****************************
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183] => (item=cluster.name: elk-cluster)
+aws_instance.elasticserchserver: Still creating... [6m0s elapsed]
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183] => (item=http.port: 9200)
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183] => (item=xpack.security.enabled: true)
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183] => (item=xpack.security.http.ssl.enabled: true)
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183] => (item=xpack.security.transport.ssl.enabled: true)
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183] => (item=xpack.security.http.ssl.key: /home/esuser/elasticsearch/elasticsearch-7.12.0/config/certs/master-1.key)
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183] => (item=xpack.security.http.ssl.certificate: /home/esuser/elasticsearch/elasticsearch-7.12.0/config/certs/master-1.crt)
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183] => (item=xpack.security.http.ssl.certificate_authorities: /home/esuser/elasticsearch/elasticsearch-7.12.0/config/certs/ca.crt)
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183] => (item=xpack.security.transport.ssl.key: /home/esuser/elasticsearch/elasticsearch-7.12.0/config/certs/master-1.key)
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183] => (item=xpack.security.transport.ssl.certificate: /home/esuser/elasticsearch/elasticsearch-7.12.0/config/certs/master-1.crt)
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183] => (item=xpack.security.transport.ssl.certificate_authorities: /home/esuser/elasticsearch/elasticsearch-7.12.0/config/certs/ca.crt)
+
+aws_instance.elasticserchserver (local-exec): TASK [Start the elasticsearch] *************************************************
+aws_instance.elasticserchserver (local-exec): changed: [13.127.69.183]
+
+aws_instance.elasticserchserver (local-exec): PLAY RECAP *********************************************************************
+aws_instance.elasticserchserver (local-exec): 13.127.69.183              : ok=18   changed=16   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+aws_instance.elasticserchserver: Creation complete after 6m7s [id=i-0e1412c0f022b6170]
+
+
+
+Note: Abobe output is for the Installation EC2 server and elasticsearch
+
+Login to the machine
+
+Check the Elasticsearch 
+
+its listening on port 9200
+[esuser@ip-XX-X-X-XXX elasticsearch-7.12.0]$ netstat -tunlp
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 127.0.0.1:25            0.0.0.0:*               LISTEN      -
+tcp        0      0 0.0.0.0:111             0.0.0.0:*               LISTEN      -
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      -
+tcp6       0      0 ::1:25                  :::*                    LISTEN      -
+tcp6       0      0 :::111                  :::*                    LISTEN      -
+tcp6       0      0 127.0.0.1:9200          :::*                    LISTEN      13606/java
+tcp6       0      0 ::1:9200                :::*                    LISTEN      13606/java
+tcp6       0      0 127.0.0.1:9300          :::*                    LISTEN      13606/java
+tcp6       0      0 ::1:9300                :::*                    LISTEN      13606/java
+tcp6       0      0 :::22                   :::*                    LISTEN      -
+udp        0      0 127.0.0.1:323           0.0.0.0:*                           -
+udp        0      0 0.0.0.0:68              0.0.0.0:*                           -
+udp        0      0 0.0.0.0:111             0.0.0.0:*                           -
+udp        0      0 0.0.0.0:696             0.0.0.0:*                           -
+udp6       0      0 ::1:323                 :::*                                -
+udp6       0      0 :::111                  :::*                                -
+udp6       0      0 :::696                  :::*                                -
+
+
+ps -ef | grep java
+
+esuser   13606     1 19 21:28 pts/0    00:00:37 /home/esuser/elasticsearch/elasticsearch-7.12.0/jdk/bin/java -Xshare:auto -Des.networkaddress.cache.ttl=60 -Des.networkaddress.cache.negative.ttl=10 -XX:+AlwaysPreTouch -Xss1m -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Djna.nosys=true -XX:-OmitStackTraceInFastThrow -XX:+ShowCodeDetailsInExceptionMessages -Dio.netty.noUnsafe=true -Dio.netty.noKeySetOptimization=true -Dio.netty.recycler.maxCapacityPerThread=0 -Dio.netty.allocator.numDirectArenas=0 -Dlog4j.shutdownHookEnabled=false -Dlog4j2.disable.jmx=true -Djava.locale.providers=SPI,COMPAT --add-opens=java.base/java.io=ALL-UNNAMED -XX:+UseG1GC -Djava.io.tmpdir=/tmp/elasticsearch-1084278734468838910 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=data -XX:ErrorFile=logs/hs_err_pid%p.log -Xlog:gc*,gc+age=trace,safepoint:file=logs/gc.log:utctime,pid,tags:filecount=32,filesize=64m -Xms395m -Xmx395m -XX:MaxDirectMemorySize=207618048 -XX:G1HeapRegionSize=4m -XX:InitiatingHeapOccupancyPercent=30 -XX:G1ReservePercent=15 -Des.path.home=/home/esuser/elasticsearch/elasticsearch-7.12.0 -Des.path.conf=/home/esuser/elasticsearch/elasticsearch-7.12.0/config -Des.distribution.flavor=default -Des.distribution.type=tar -Des.bundled_jdk=true -cp /home/esuser/elasticsearch/elasticsearch-7.12.0/lib/* org.elasticsearch.bootstrap.Elasticsearch -d
+
+
+Create the Elasticsearch user and password with the below command
+
+[esuser@ip-10-0-0-107 elasticsearch-7.12.0]$ bin/elasticsearch-setup-passwords auto
+Initiating the setup of passwords for reserved users elastic,apm_system,kibana,kibana_system,logstash_system,beats_system,remote_monitoring_user.
+The passwords will be randomly generated and printed to the console.
+Please confirm that you would like to continue [y/N]y
+
+
+Changed password for user apm_system
+PASSWORD apm_system = mUv3KmsqT7tU8zrNVrd8
+
+Changed password for user kibana_system
+PASSWORD kibana_system = FV3zCECq6ZrEbbWfbbpC
+
+Changed password for user kibana
+PASSWORD kibana = FV3zCECq6ZrEbbWfbbpC
+
+Changed password for user logstash_system
+PASSWORD logstash_system = LEWk8kRIXBuBJpeFtHk8
+
+Changed password for user beats_system
+PASSWORD beats_system = 6rsbVhZia1QI6ERH785s
+
+Changed password for user remote_monitoring_user
+PASSWORD remote_monitoring_user = ruECom62fuLOt6c5GldQ
+
+Changed password for user elastic
+PASSWORD elastic = oS5mzzZinQdthSgFctXR
+
+
+check the status of cluster with curl command
+
+[esuser@ip-10-0-0-107 elasticsearch-7.12.0]$ curl -u elastic:'oS5mzzZinQdthSgFctXR' -XGET  'https://localhost:9200/_cluster/health?pretty' -k
+{
+  "cluster_name" : "elk-cluster",
+  "status" : "green",
+  "timed_out" : false,
+  "number_of_nodes" : 1,
+  "number_of_data_nodes" : 1,
+  "active_primary_shards" : 1,
+  "active_shards" : 1,
+  "relocating_shards" : 0,
+  "initializing_shards" : 0,
+  "unassigned_shards" : 0,
+  "delayed_unassigned_shards" : 0,
+  "number_of_pending_tasks" : 0,
+  "number_of_in_flight_fetch" : 0,
+  "task_max_waiting_in_queue_millis" : 0,
+  "active_shards_percent_as_number" : 100.0
+}
+

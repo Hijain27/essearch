@@ -1,0 +1,51 @@
+
+
+
+Some answers we are looking:
+1. What did you choose to automate the provisioning and bootstrapping of the instance? Why?
+Answer :
+I have used the Terraform tool to automate the provisioning and for bootstrapping i used the Ansible.
+I feel  terrafrom is easy compare to other provisioing tool, we can automate any task on any cloud as well as on premises, Terraform doesnot have 
+any dependency like cloudformation. For the bootstarping i have used the Provisioners inside the terrafrom script and integrated with the ansible. 
+So as per the requirnment it will install the java, elasticsearch and enable the securtiy on elasicsearch after that it will create one master elasticsearch server.
+
+
+2. How did you choose to secure ElasticSearch? Why?
+Answer :
+For the security purose:
+1) choose the TLS/HTTP encryption method.
+TLS encrpytion method is used for secure the nodes in the cluster and HTTP encryption is used for the client 
+communication from the internet which has https method.
+2) Secure the instance from the internt like create the security group and NACL
+3) Use the diffecnet port ( (Here i have used by default port for the demonstrates)
+
+3. How would you monitor this instance? What metrics would you monitor?
+Answer : For the monitoring purpose in the market a lot of tools are there, I would use nagios monitoring tool where we can monitor the lot of metrics.               
+CPU Metrics, Memory Metrics, Disk Metrics,Current Users, infra side             
+Elasticsearch status, Elasticsearch Port Listen monitoring,  Application Side
+
+
+4. Could you extend your solution to launch a secure cluster of ElasticSearch nodes? What
+would need to change to support this use case?
+Answer: Its depend according to the requirnment.
+you need to create that cluster in the private subnet then create the security group and nacl rules.
+there communication and access should be secure, Between noeds port reachability also needs to define.
+After that you can enable the TLS/SSL encrpytion method.
+Create the eLasticsearch user and password to secure your ES cluster
+
+5. Could you extend your solution to replace a running ElasticSearch instance with little or no
+downtime? How?
+Answer:  I would like to choose the kubernetes to replicate a running elasticsearch with no downtime,
+You can create the manifest file for the deployment where you need to choose the rolling update strategy that will
+create new replication set, Your existing Replica set also there. once pods will be running with the new images in the next replica set
+then it will delete old replica set.
+
+
+6. Was it a priority to make your code well structured, extensible, and reusable?
+yes,  but in 3 hours you can't think about that
+My code is structured and resuseable but we can improve lot of thing over there.
+in this code,  i didn't use modules in terrafrom for the reuse but we can improve that code as well.
+
+
+7. What sacrifices did you make due to time?
+Answer: Not Any sacrifices but i got to know some kind of error which can help me in future because i never integrated terraform with ansible 
